@@ -1,0 +1,83 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sarada-antyakshari-dev",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-09-03",
+  "assets": {
+    "directory": "./dist/client",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application"
+  },
+  "observability": {
+    "enabled": true,
+    "redact_query_string": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_id": "__DEV_D1_DATABASE_ID__",
+      "migrations_dir": "migrations",
+      "remote": true
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "SONGS",
+      "bucket_name": "__DEV_R2_BUCKET_NAME__",
+      "remote": true
+    }
+  ],
+  "ratelimits": [
+    {
+      "name": "API_RATE_LIMITER",
+      "namespace_id": "1001",
+      "simple": { "limit": 120, "period": 60 }
+    },
+    {
+      "name": "START_RATE_LIMITER",
+      "namespace_id": "1002",
+      "simple": { "limit": 10, "period": 60 }
+    },
+    {
+      "name": "MEDIA_RATE_LIMITER",
+      "namespace_id": "1003",
+      "simple": { "limit": 300, "period": 60 }
+    }
+  ],
+  "vars": {
+    "ALLOWED_ORIGINS": "",
+    "MAX_ATTEMPTS": "5",
+    "SESSION_TTL_SECONDS": "3600",
+    "MEDIA_TOKEN_TTL_SECONDS": "300",
+    "MAX_REQUEST_BYTES": "16384"
+  },
+  "triggers": {
+    "crons": ["17 * * * *"]
+  },
+  "env": {
+    "production": {
+      "name": "sarada-antyakshari",
+      "observability": { "enabled": true, "redact_query_string": true },
+      "d1_databases": [{
+        "binding": "DB",
+        "database_id": "__PROD_D1_DATABASE_ID__",
+        "migrations_dir": "migrations",
+        "remote": true
+      }],
+      "r2_buckets": [{ "binding": "SONGS", "bucket_name": "__PROD_R2_BUCKET_NAME__", "remote": true }],
+      "ratelimits": [
+        { "name": "API_RATE_LIMITER", "namespace_id": "2001", "simple": { "limit": 120, "period": 60 } },
+        { "name": "START_RATE_LIMITER", "namespace_id": "2002", "simple": { "limit": 10, "period": 60 } },
+        { "name": "MEDIA_RATE_LIMITER", "namespace_id": "2003", "simple": { "limit": 300, "period": 60 } }
+      ],
+      "vars": {
+        "ALLOWED_ORIGINS": "",
+        "MAX_ATTEMPTS": "5",
+        "SESSION_TTL_SECONDS": "3600",
+        "MEDIA_TOKEN_TTL_SECONDS": "300",
+        "MAX_REQUEST_BYTES": "16384"
+      },
+      "triggers": { "crons": ["17 * * * *"] }
+    }
+  }
+}

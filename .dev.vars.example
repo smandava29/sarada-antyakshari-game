@@ -1,0 +1,3 @@
+# Local Worker secret for the development resources only. Generate with:
+# node -e "console.log(require('node:crypto').randomBytes(32).toString('base64url'))"
+MEDIA_TOKEN_SECRET=REPLACE_WITH_A_BASE64URL_ENCODED_32_BYTE_SECRET
