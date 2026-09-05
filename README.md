@@ -143,6 +143,12 @@ They are identifiers rather than credentials, but this arrangement keeps their
 actual values out of the repository. The generator validates both values and
 fails before the build if either is missing or malformed.
 
+`workers.dev` and Worker preview URLs are disabled for production. Attach a
+custom domain in Cloudflare Dashboard under **Workers & Pages** →
+**sarada-antyakshari** → **Settings** → **Domains & Routes** before deploying
+or immediately after the first successful deployment. The custom domain is the
+only public application URL; do not add a `workers.dev` route.
+
 ## AdSense production configuration
 
 Use `.env.production.example` as the production-variable reference and configure
