@@ -98,12 +98,6 @@ jobs:
           VITE_ADSENSE_RIGHT_SLOT: ${{ vars.VITE_ADSENSE_RIGHT_SLOT }}
           VITE_ADSENSE_BOTTOM_SLOT: ${{ vars.VITE_ADSENSE_BOTTOM_SLOT }}
 
-      - name: Apply production D1 migrations
-        run: npx wrangler d1 migrations apply DB --remote --env production --config wrangler.jsonc
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-
       - name: Deploy with Wrangler
         run: npx wrangler deploy --env production --config wrangler.jsonc
         env:

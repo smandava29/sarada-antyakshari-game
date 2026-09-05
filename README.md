@@ -39,7 +39,6 @@ worker/repositories/         D1 queries
 worker/services/             game rules and private R2 streaming
 worker/validation/           request and media-path authorization
 worker/utils/                dates, crypto, responses, and errors
-migrations/                    D1 schema and attempt-history migration
 wrangler.example.jsonc       Sanitized Worker configuration template
 scripts/generate-wrangler-config.js  CI-only Wrangler configuration generator
 ```
@@ -81,18 +80,8 @@ npx wrangler secret put MEDIA_TOKEN_SECRET
 Never use a `VITE_` prefix for this secret. Variables with that prefix are
 compiled into browser code.
 
-## Database migrations
-
-Apply the schema locally and remotely:
-
-```bash
-npm run db:migrate:local
-npm run db:migrate:dev
-```
-
-Production schema migrations are applied automatically by GitHub Actions before
-the Worker is deployed. This repository intentionally contains no application
-data importer, database loader, or R2 uploader.
+Database and R2 schema/content administration is intentionally outside this
+application repository and its deployment workflow.
 
 ## R2 object layout
 
@@ -130,16 +119,16 @@ bindings connect to the isolated remote development D1 database and `songs-dev`
 R2 bucket. Authenticate once with `npx wrangler login` before starting it.
 Copy `.env.development.example` to `.env.development.local` for public browser
 settings and keep the development-only media secret in ignored `.dev.vars`.
-Use `npm run db:migrate:dev` and `npm run dev` for development. There is no
-development Worker deployment command. The existing
-`db:migrate:local` command remains available for isolated Miniflare tests.
+Use `npm run dev` for development. There is no development Worker deployment
+command.
 
 Production resources exist only in Wrangler's explicit `production` environment
 and are deployed only by GitHub Actions after a push to `main`.
 Use `.env.production.example` as its public-variable template. Store a separate
 production media secret with
 `npx wrangler secret put MEDIA_TOKEN_SECRET --env production`. The workflow
-applies production D1 migrations and deploys the Worker after all checks pass.
+deploys the Worker after all checks pass and does not alter D1 or R2 structure
+or content.
 
 The production workflow generates its ignored `wrangler.jsonc` from
 `wrangler.example.jsonc`. Configure these GitHub `production` Environment

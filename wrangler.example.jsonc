@@ -16,7 +16,6 @@
     {
       "binding": "DB",
       "database_id": "__DEV_D1_DATABASE_ID__",
-      "migrations_dir": "migrations",
       "remote": true
     }
   ],
@@ -61,7 +60,6 @@
       "d1_databases": [{
         "binding": "DB",
         "database_id": "__PROD_D1_DATABASE_ID__",
-        "migrations_dir": "migrations",
         "remote": true
       }],
       "r2_buckets": [{ "binding": "SONGS", "bucket_name": "__PROD_R2_BUCKET_NAME__", "remote": true }],
