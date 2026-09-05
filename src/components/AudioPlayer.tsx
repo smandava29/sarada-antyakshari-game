@@ -252,6 +252,12 @@ export function AudioPlayer({
       ? "Pause audio"
       : label || "Play audio";
 
+  const markReady = () => {
+    setLoading(false);
+    setReady(true);
+    setFailed(false);
+  };
+
   return (
     <div
       className={variant === "overlay" ? "audio-panel-overlay" : "audio-panel"}
@@ -259,12 +265,10 @@ export function AudioPlayer({
       <audio
         ref={audioRef}
         src={source ?? undefined}
-        preload="metadata"
-        onCanPlay={() => {
-          setLoading(false);
-          setReady(true);
-          setFailed(false);
-        }}
+        preload="auto"
+        onLoadedMetadata={markReady}
+        onLoadedData={markReady}
+        onCanPlay={markReady}
         onEnded={stopAtLimit}
         onError={handleMediaError}
         onTimeUpdate={() => {

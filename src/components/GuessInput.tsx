@@ -1,5 +1,5 @@
 import Fuse from 'fuse.js';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { getSongCatalog } from '../lib/songCatalog';
 import type { SongSuggestion } from '../types/game';
 
@@ -15,6 +15,8 @@ export function GuessInput({ disabled, onGuess, onSkip }: GuessInputProps) {
   const [selected, setSelected] = useState<SongSuggestion | null>(null);
   const [loadingCatalog, setLoadingCatalog] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const selectRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -45,6 +47,17 @@ export function GuessInput({ disabled, onGuess, onSkip }: GuessInputProps) {
     return () => {
       active = false;
     };
+  }, []);
+
+  useEffect(() => {
+    const closeOnOutsidePointer = (event: PointerEvent) => {
+      if (!selectRef.current?.contains(event.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('pointerdown', closeOnOutsidePointer);
+    return () => document.removeEventListener('pointerdown', closeOnOutsidePointer);
   }, []);
 
   const searchIndex = useMemo(
@@ -83,6 +96,7 @@ export function GuessInput({ disabled, onGuess, onSkip }: GuessInputProps) {
     setSelected(song);
     setQuery(song.songTitle);
     setSearchError(null);
+    setMenuOpen(false);
   };
 
   const clear = () => {
@@ -97,11 +111,11 @@ export function GuessInput({ disabled, onGuess, onSkip }: GuessInputProps) {
     clear();
   };
 
-  const showSuggestions = !selected && query.trim().length >= 2;
+  const showSuggestions = menuOpen && !selected && query.trim().length >= 2;
 
   return (
     <div className="guess-area">
-      <div className="guess-select">
+      <div className="guess-select" ref={selectRef}>
         <div className="guess-input-row">
           <input
             aria-label="Search for a song"
@@ -115,12 +129,20 @@ export function GuessInput({ disabled, onGuess, onSkip }: GuessInputProps) {
                 : 'Type a song title...'
             }
             value={query}
+            onFocus={() => setMenuOpen(true)}
+            onClick={() => setMenuOpen(true)}
             onChange={(event) => {
               setQuery(event.target.value);
               setSelected(null);
               setSearchError(null);
+              setMenuOpen(true);
             }}
             onKeyDown={(event) => {
+              if (event.key === 'Escape') {
+                setMenuOpen(false);
+                return;
+              }
+
               if (event.key === 'Enter' && selected) {
                 void submit();
               }
@@ -162,7 +184,6 @@ export function GuessInput({ disabled, onGuess, onSkip }: GuessInputProps) {
                   onClick={() => choose(song)}
                 >
                   <strong>{song.songTitle}</strong>
-                  {song.movieTitle && <small>{song.movieTitle}</small>}
                 </button>
               ))}
 
@@ -190,7 +211,7 @@ export function GuessInput({ disabled, onGuess, onSkip }: GuessInputProps) {
           disabled={disabled}
           onClick={() => void onSkip()}
         >
-          Skip
+          Play more
         </button>
 
         <button

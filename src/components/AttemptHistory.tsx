@@ -9,7 +9,6 @@ export function AttemptHistory({ history }: { history: AttemptHistoryItem[] }) {
           <strong>#{attempt.attemptNumber}</strong>
           <div className="history-copy">
             <span>{attempt.attemptType === 'skip' ? 'Skipped' : attempt.songTitle}</span>
-            {attempt.movieTitle && <small>{attempt.movieTitle}</small>}
           </div>
           <span aria-label={attempt.wasCorrect ? 'Correct' : 'Incorrect'}>{attempt.wasCorrect ? '✓' : attempt.attemptType === 'skip' ? '—' : '×'}</span>
         </div>
