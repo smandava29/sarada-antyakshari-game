@@ -1,4 +1,3 @@
-import { useCallback, useEffect, useState } from 'react';
 import { config } from '../lib/config';
 import { formatGameDate, todayIso } from '../lib/date';
 import { useGame } from '../hooks/useGame';
@@ -13,11 +12,6 @@ export function GameView({
 }: {
   questionDate: string;
 }) {
-  const [
-    questionMediaError,
-    setQuestionMediaError,
-  ] = useState<string | null>(null);
-
   const {
     game,
     sessionToken,
@@ -29,14 +23,6 @@ export function GameView({
     submitGuess,
     skip,
   } = useGame(questionDate);
-
-  useEffect(() => {
-    setQuestionMediaError(null);
-  }, [questionDate]);
-
-  const handleQuestionMediaError = useCallback(() => {
-    setQuestionMediaError('Game not found for this date.');
-  }, []);
 
   if (loading) {
     return (
@@ -88,10 +74,7 @@ export function GameView({
   const showResult =
     finished && game.answer !== null;
 
-  const gameNotFound =
-    questionMediaError !== null ||
-    error ===
-      'The requested game is not available.';
+  const gameNotFound = error === 'The requested game is not available.';
 
   return (
     <div className="page-content">
@@ -127,8 +110,7 @@ export function GameView({
             durationLimit={duration}
             disabled={submitting}
             refreshOnError={Boolean(sessionToken)}
-            showRetryOnError={false}
-            onLoadError={handleQuestionMediaError}
+            showRetryOnError
           />
 
           <GuessInput

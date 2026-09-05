@@ -2,6 +2,7 @@ import { getConfig } from "./config";
 import { deleteExpiredSessions } from "./repositories/game-repository";
 import { routeGameRequest } from "./router";
 import { serveMedia, serveQuestionClip, serveSuggestions } from "./services/media-service";
+import { rewriteSeoDocument } from "./seo";
 import type { Env } from "./types";
 import {
   errorResponse,
@@ -120,7 +121,11 @@ export default {
       });
     }
 
-    return withSecurityHeaders(await env.ASSETS.fetch(request));
+    const assetResponse = await env.ASSETS.fetch(request);
+    const isHtml = assetResponse.headers.get("Content-Type")?.includes("text/html");
+    return withSecurityHeaders(
+      isHtml ? rewriteSeoDocument(assetResponse, url.pathname) : assetResponse,
+    );
   },
 
   async scheduled(_controller: ScheduledController, env: Env): Promise<void> {

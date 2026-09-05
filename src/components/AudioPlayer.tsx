@@ -97,6 +97,15 @@ export function AudioPlayer({
   const setMediaSource = useCallback(
     async (forceRefresh: boolean) => {
       const sequence = ++requestSequenceRef.current;
+
+      if (forceRefresh && !sessionToken && mediaUrl) {
+        audioRef.current?.load();
+        if (sequence === requestSequenceRef.current) {
+          setSource(mediaUrl);
+        }
+        return;
+      }
+
       const nextMedia = await getUsableMedia(
         sessionToken,
         asset,
@@ -234,11 +243,7 @@ export function AudioPlayer({
 
   const activate = () => {
     if (failed) {
-      if (refreshOnError) {
-        void retry();
-      } else {
-        onLoadErrorRef.current?.();
-      }
+      void retry();
     } else if (playing) {
       pause();
     } else {
