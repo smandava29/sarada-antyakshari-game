@@ -6,7 +6,7 @@ const IV_BYTES = 12;
 const TOKEN_VERSION = 1;
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
-const additionalData = encoder.encode("sarada-media-token-v1");
+const additionalData = encoder.encode("sa-media-token-v1");
 
 interface MediaTokenPayload {
   version: number;

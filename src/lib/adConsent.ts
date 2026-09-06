@@ -1,7 +1,7 @@
 export type AdConsent = "accepted" | "rejected" | null;
 
-const STORAGE_KEY = "sarada_ads_consent_v1";
-export const AD_CONSENT_EVENT = "sarada:ad-consent-change";
+const STORAGE_KEY = "SA_ads_consent_v1";
+export const AD_CONSENT_EVENT = "SA:ad-consent-change";
 
 export function getAdConsent(): AdConsent {
   try {
