@@ -14,11 +14,11 @@ const feedbackLink =
 
 const donationIcon =
   import.meta.env.VITE_DONATION_ICON_URL?.trim() ||
-  "/donate.gif";
+  "/feedback.gif";
 
 const feedbackIcon =
   import.meta.env.VITE_FEEDBACK_ICON_URL?.trim() ||
-  "/feedback.gif";
+  "/suggestions.gif";
 
 export function FooterActions({ children }: FooterActionsProps) {
   return (
