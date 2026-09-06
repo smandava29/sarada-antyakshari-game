@@ -12,7 +12,7 @@ function getStorage(): Storage | null {
   }
 
   try {
-    return window.sessionStorage;
+    return window.localStorage;
   } catch {
     return null;
   }

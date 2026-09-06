@@ -7,6 +7,8 @@ interface AttemptTimelineProps {
   maxAttempts: number;
 }
 
+const clueLabels = [" 1 sec", "2 sec", "5 sec", "7 sec", "10 sec"];
+
 export function AttemptTimeline({ attemptsUsed, status, history, maxAttempts }: AttemptTimelineProps) {
   return (
     <div className="attempt-timeline" aria-label={`${attemptsUsed} of ${maxAttempts} chances used`}>
@@ -17,7 +19,9 @@ export function AttemptTimeline({ attemptsUsed, status, history, maxAttempts }: 
         else if (attempt?.attemptType === 'skip') className += ' skipped';
         else if (attempt) className += ' wrong';
         else if (status === 'playing' && index === attemptsUsed) className += ' current';
-        return <div className={className} key={index}>{index + 1}</div>;
+        else if (status === 'playing' && index === attemptsUsed + 1) className += ' next-step';
+
+        return <div className={className} key={index}>{clueLabels[index] ?? `${index + 1} sec`}</div>;
       })}
     </div>
   );

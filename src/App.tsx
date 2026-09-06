@@ -64,6 +64,11 @@ export default function App() {
         </footer>
 
         <Modal title="How to play" open={helpOpen} onClose={() => setHelpOpen(false)}>
+          <div className="instructions-grid">
+            <div><strong>5</strong><span>Chances</span></div>
+            <div><strong>10s</strong><span>Maximum clue</span></div>
+            <div><strong>Daily</strong><span>New game</span></div>
+          </div>
           <ol className="instruction-list">
             <li>Play the song clue.</li>
             <li>Search and choose a song, or skip the chance.</li>
@@ -73,14 +78,11 @@ export default function App() {
         </Modal>
 
         <Modal title="Today's status" open={statsOpen} onClose={() => setStatsOpen(false)}>
-          <div className="status-grid">
-            <div><strong>5</strong><span>Chances</span></div>
-            <div><strong>10s</strong><span>Maximum clue</span></div>
-            <div><strong>Daily</strong><span>New game</span></div>
-          </div>
-          <p className="muted-text">
-            Game sessions and attempt history stay in this browser tab and expire with the server session.
-          </p>
+          <ol className="stats-list">
+            <li>Stats are not tracked yet.</li>
+            <li>This is a placeholder for future functionality.</li>
+            <li>If you feel stats are important, get a life bro.</li>
+          </ol>
         </Modal>
       </div>
     </AdsLayout>

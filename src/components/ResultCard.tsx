@@ -4,13 +4,13 @@ import { useCountdown } from "../hooks/useCountdown";
 import { formatCountdown } from '../lib/date';
 import { gameApi } from "../lib/gameApi";
 import { rememberMedia } from "../lib/secureMedia";
-import type { AttemptHistoryItem, GameState, ResultMediaBundle } from '../types/game';
+import type { GameState, ResultMediaBundle } from '../types/game';
 import { AudioPlayer } from './AudioPlayer';
+import { ConfettiCelebration } from './ConfettiCelebration';
 import { SecureImage } from './SecureImage';
 
 interface ResultCardProps {
   game: GameState;
-  history: AttemptHistoryItem[];
   isToday: boolean;
   sessionToken: string;
 }
@@ -37,7 +37,7 @@ async function copyText(text: string): Promise<void> {
   }
 }
 
-export function ResultCard({ game, history, isToday, sessionToken }: ResultCardProps) {
+export function ResultCard({ game, isToday, sessionToken }: ResultCardProps) {
   const countdown = useCountdown();
   const [shareStatus, setShareStatus] = useState<string | null>(null);
   const [resultMedia, setResultMedia] = useState<ResultMediaBundle | null>(game.resultMedia);
@@ -98,7 +98,7 @@ export function ResultCard({ game, history, isToday, sessionToken }: ResultCardP
 
     statusTimerRef.current = window.setTimeout(() => {
       setShareStatus(null);
-    }, 3_000);
+    }, 1_000);
   };
 
   const share = async () => {
@@ -106,47 +106,23 @@ export function ResultCard({ game, history, isToday, sessionToken }: ResultCardP
       ? window.location.origin
       : `${window.location.origin}/archive/${game.questionDate}`;
 
-    const cells = history.map((attempt) => attempt.wasCorrect ? '🟩' : attempt.attemptType === 'skip' ? '⬜' : '🟥').join('');
-    
-    const gameLabel = isToday ? "today's game" : `the ${game.questionDate} archive game`;
-    
     const text = [
-      `Sarada Antyakshari ${game.questionDate}`,
-      `${cells} ${game.attemptsUsed}/5`,
-      `🎵 ${answer.songTitle}`,
-      "",
-      `Check out ${gameLabel} on Sarada Antyakshari!`,
+      `Sarada Antyakshari — Guess the Telugu Song`,
+      `Check out ${websiteUrl}!`,
     ].join("\n");
 
     const clipboardText = `${text}\n${websiteUrl}`;
-    
     try {
-      if (navigator.share) {
-        await navigator.share({
-          title: `${answer.songTitle} — Sarada Antyakshari`,
-          text: text,
-          url: websiteUrl,
-        });
-        showShareStatus("Game shared successfully.");
-        return;
-      }
       await copyText(clipboardText);
-      showShareStatus("Share message copied to clipboard.");
-    } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") {
-        return;
-      }
-      try {
-        await copyText(clipboardText);
-        showShareStatus("Share message copied to clipboard.");
-      } catch {
-        showShareStatus("Unable to share or copy the message.");
-      }
+      showShareStatus("Game link copied to clipboard.");
+    } catch {
+      showShareStatus("Unable to copy the game link.");
     }
   };
 
   return (
     <section className="result-card" aria-label="Game result">
+      {game.status === 'won' && <ConfettiCelebration questionDate={game.questionDate} />}
       <div className="result-cover-column">
         <div className="cover-wrapper">
           {resultMedia ? (

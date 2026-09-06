@@ -63,7 +63,10 @@ export function GuessInput({ disabled, onGuess, onSkip }: GuessInputProps) {
   const searchIndex = useMemo(
     () =>
       new Fuse(catalog, {
-        keys: ['songTitle'],
+        keys: [
+          { name: 'songTitle', weight: 0.8 },
+          { name: 'movieTitle', weight: 0.2 },
+        ],
         threshold: 0.3,
         ignoreLocation: true,
         minMatchCharLength: 2,
@@ -184,6 +187,7 @@ export function GuessInput({ disabled, onGuess, onSkip }: GuessInputProps) {
                   onClick={() => choose(song)}
                 >
                   <strong>{song.songTitle}</strong>
+                  {song.movieTitle && <small>{song.movieTitle}</small>}
                 </button>
               ))}
 
@@ -211,7 +215,7 @@ export function GuessInput({ disabled, onGuess, onSkip }: GuessInputProps) {
           disabled={disabled}
           onClick={() => void onSkip()}
         >
-          Play more
+          Skip this Chance
         </button>
 
         <button

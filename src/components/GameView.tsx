@@ -94,7 +94,7 @@ export function GameView({
             Game not found for this date.
           </p>
         </section>
-      ) : !finished ? (
+      ) : (
         <section className="game-card">
           <AttemptTimeline
             attemptsUsed={game.attemptsUsed}
@@ -103,41 +103,54 @@ export function GameView({
             maxAttempts={game.maxAttempts}
           />
 
-          <AudioPlayer
-            sessionToken={mediaSessionToken}
-            asset="question"
-            media={game.questionMedia}
-            durationLimit={duration}
-            disabled={submitting}
-            refreshOnError={Boolean(sessionToken)}
-            showRetryOnError
-          />
+          {!finished && (
+            <>
+              {questionDate === todayIso() && game.attemptsUsed === 0 && (
+                <p className="game-hint">
+                  Listen to the song clue, Guess the Song, or Skip the chance to listen more of the song.
+                </p>
+              )}
 
-          <GuessInput
-            disabled={submitting}
-            onGuess={submitGuess}
-            onSkip={skip}
-          />
+              <AudioPlayer
+                sessionToken={mediaSessionToken}
+                asset="question"
+                media={game.questionMedia}
+                durationLimit={duration}
+                disabled={submitting}
+                refreshOnError={Boolean(sessionToken)}
+                showRetryOnError
+              />
 
-          {error && (
-            <p className="game-message error">
-              {error}
-            </p>
+              <GuessInput
+                disabled={submitting}
+                onGuess={submitGuess}
+                onSkip={skip}
+              />
+
+              {error && (
+                <p className="game-message error">
+                  {error}
+                </p>
+              )}
+
+              <p className="tries-remaining" aria-live="polite">
+                You have {game.maxAttempts - game.attemptsUsed} {game.maxAttempts - game.attemptsUsed === 1 ? 'try' : 'tries'} remaining.
+              </p>
+            </>
+          )}
+
+          {showResult && sessionToken && (
+            <ResultCard
+              game={game}
+              isToday={
+                questionDate === todayIso()
+              }
+              sessionToken={sessionToken}
+            />
           )}
 
           <AttemptHistory history={history} />
         </section>
-      ) : null}
-
-      {showResult && sessionToken && (
-        <ResultCard
-          game={game}
-          history={history}
-          isToday={
-            questionDate === todayIso()
-          }
-          sessionToken={sessionToken}
-        />
       )}
     </div>
   );
