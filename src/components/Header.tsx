@@ -12,10 +12,10 @@ export function Header({ onHelp, onStats }: HeaderProps) {
   return (
     <header className="site-header">
       <div className="header-inner">
-        <AppLink className="brand" href="/" aria-label="Sarada Antyakshari home">
+        <AppLink className="brand" href="/" aria-label="Saradaga Antyakshari home">
           {/* <span className="brand-mark" aria-hidden="true">♫</span> */}
           <img className="brand-logo" src="/logo.png" alt="" aria-hidden="true" />
-          <span className="brand-name">Sarada Antyakshari</span>
+          <span className="brand-name">Saradaga Antyakshari</span>
         </AppLink>
         <nav className="header-actions" aria-label="Game controls">
           <AppLink className={`icon-button ${pathname.startsWith('/archive') ? 'active' : ''}`} href="/archive" aria-label="Archive">

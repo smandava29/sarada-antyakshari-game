@@ -1,4 +1,4 @@
-const SITE_ORIGIN = "https://sarada-antyakshari.com";
+const SITE_ORIGIN = "https://saradaga-antyakshari.com";
 const LOGO_URL = `${SITE_ORIGIN}/logo_large.png`;
 
 interface SeoDocument {
@@ -14,16 +14,16 @@ function archiveDocument(pathname: string): SeoDocument {
   const suffix = date ? `: ${date}` : "";
 
   return {
-    title: `Sarada Antyakshari Archive${suffix} | Telugu Song Guessing Game`,
+    title: `Saradaga Antyakshari Archive${suffix} | Telugu Song Guessing Game`,
     description: date
-      ? `Play the Sarada Antyakshari Telugu song guessing game archive for ${date}.`
-      : "Explore previous Sarada Antyakshari daily Telugu song guessing games.",
+      ? `Play the Saradaga Antyakshari Telugu song guessing game archive for ${date}.`
+      : "Explore previous Saradaga Antyakshari daily Telugu song guessing games.",
     canonicalPath: date ? `/archive/${date}` : "/archive",
     fallbackHtml: `
       <main>
-        <h1>Sarada Antyakshari Archive${suffix}</h1>
+        <h1>Saradaga Antyakshari Archive${suffix}</h1>
         <p>Explore previous daily Telugu song guessing games.</p>
-        <p><a href="/">Play today’s Sarada Antyakshari game</a></p>
+        <p><a href="/">Play today’s Saradaga Antyakshari game</a></p>
       </main>`,
   };
 }
@@ -34,13 +34,13 @@ export function seoDocument(pathname: string): SeoDocument {
   }
 
   return {
-    title: "Sarada Antyakshari | Daily Telugu Song Guessing Game",
+    title: "Saradaga Antyakshari | Daily Telugu Song Guessing Game",
     description:
-      "Play Sarada Antyakshari, a daily Telugu song guessing game. Listen to a short song clue, search the title, and solve today’s challenge in five chances.",
+      "Play Saradaga Antyakshari, a daily Telugu song guessing game. Listen to a short song clue, search the title, and solve today’s challenge in five chances.",
     canonicalPath: "/",
     fallbackHtml: `
       <main>
-        <h1>Sarada Antyakshari: Daily Telugu Song Guessing Game</h1>
+        <h1>Saradaga Antyakshari: Daily Telugu Song Guessing Game</h1>
         <p>A Telugu song guessing game with a new song every day.</p>
         <p><a href="/archive">Explore previous games in the archive</a></p>
       </main>`,
@@ -54,13 +54,13 @@ function schema(document: SeoDocument): string {
     "@graph": [
       {
         "@type": "WebSite",
-        name: "Sarada Antyakshari",
+        name: "Saradaga Antyakshari",
         url: SITE_ORIGIN,
         inLanguage: "en",
       },
       {
         "@type": "WebApplication",
-        name: "Sarada Antyakshari",
+        name: "Saradaga Antyakshari",
         applicationCategory: "GameApplication",
         operatingSystem: "Web",
         isAccessibleForFree: true,

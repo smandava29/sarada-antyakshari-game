@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "sarada-antyakshari-dev",
+  "name": "saradaga-antyakshari-dev",
   "main": "worker/index.ts",
   "compatibility_date": "2026-09-03",
   "workers_dev": false,
@@ -57,7 +57,7 @@
   },
   "env": {
     "production": {
-      "name": "sarada-antyakshari",
+      "name": "saradaga-antyakshari",
       "workers_dev": false,
       "preview_urls": false,
       "observability": { "enabled": true, "redact_query_string": true },

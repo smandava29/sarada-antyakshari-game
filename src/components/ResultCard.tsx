@@ -107,11 +107,11 @@ export function ResultCard({ game, isToday, sessionToken }: ResultCardProps) {
       : `${window.location.origin}/archive/${game.questionDate}`;
 
     const text = [
-      `Sarada Antyakshari — Guess the Telugu Song`,
-      `Check out ${websiteUrl}!`,
+      `Saradaga Antyakshari — Guess the Telugu Song`,
+      `Play now at ${websiteUrl}`,
     ].join("\n");
 
-    const clipboardText = `${text}\n${websiteUrl}`;
+    const clipboardText = `${text}`;
     try {
       await copyText(clipboardText);
       showShareStatus("Game link copied to clipboard.");

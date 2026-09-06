@@ -1,4 +1,4 @@
-# Sarada Antyakshari — Cloudflare edition
+# Saradaga Antyakshari — Cloudflare edition
 
 A daily Telugu song guessing game running entirely on Cloudflare:
 
@@ -50,8 +50,8 @@ Authenticate and create the database and private bucket:
 ```bash
 npm install
 npx wrangler login
-npx wrangler d1 create sarada-antyakshari
-npx wrangler r2 bucket create sarada-antyakshari-songs
+npx wrangler d1 create saradaga-antyakshari
+npx wrangler r2 bucket create saradaga-antyakshari-songs
 ```
 
 Copy `wrangler.example.jsonc` to the ignored local file `wrangler.jsonc`, then
@@ -145,7 +145,7 @@ fails before the build if either is missing or malformed.
 
 `workers.dev` and Worker preview URLs are disabled for production. Attach a
 custom domain in Cloudflare Dashboard under **Workers & Pages** →
-**sarada-antyakshari** → **Settings** → **Domains & Routes** before deploying
+**saradaga-antyakshari** → **Settings** → **Domains & Routes** before deploying
 or immediately after the first successful deployment. The custom domain is the
 only public application URL; do not add a `workers.dev` route.
 

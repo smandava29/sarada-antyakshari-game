@@ -1,5 +1,5 @@
-const SESSION_PREFIX = 'sarada-antyakshari-session';
-const HISTORY_PREFIX = 'sarada-antyakshari-history';
+const SESSION_PREFIX = 'saradaga-antyakshari-session';
+const HISTORY_PREFIX = 'saradaga-antyakshari-history';
 
 interface StoredSession {
   token: string;

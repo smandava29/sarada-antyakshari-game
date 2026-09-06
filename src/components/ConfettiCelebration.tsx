@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties } from "react";
 
-const celebrationPrefix = "sarada-antyakshari-celebrated";
+const celebrationPrefix = "saradaga-antyakshari-celebrated";
 const particleColors = ["#d7a653", "#f3d28a", "#d86555", "#72b58f", "#a58bd4"];
 
 function hasCelebrated(questionDate: string): boolean {

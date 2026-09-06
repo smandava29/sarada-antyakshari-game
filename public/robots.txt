@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://sarada-antyakshari.com/sitemap.xml
+Sitemap: https://saradaga-antyakshari.com/sitemap.xml
