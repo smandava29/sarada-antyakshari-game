@@ -21,7 +21,15 @@ const MEDIA_ASSETS = new Set<MediaAsset>([
   "cover",
 ]);
 
-async function importKey(encodedSecret: string): Promise<CryptoKey> {
+async function importKey(encodedSecret: string | undefined): Promise<CryptoKey> {
+  if (!encodedSecret?.trim()) {
+    throw new ApiError(
+      500,
+      "INVALID_CONFIGURATION",
+      "MEDIA_TOKEN_SECRET is not configured.",
+    );
+  }
+
   const keyBytes = decodeBase64Url(encodedSecret.trim());
   if (keyBytes.byteLength !== 32) {
     throw new ApiError(

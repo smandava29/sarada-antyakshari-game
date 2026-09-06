@@ -34,6 +34,7 @@ export function AudioPlayer({
   const refreshAttemptedRef = useRef(false);
   const requestSequenceRef = useRef(0);
   const onLoadErrorRef = useRef(onLoadError);
+  const sessionTokenRef = useRef(sessionToken);
   const mediaUrl = media?.signedUrl.trim() || null;
 
   const [source, setSource] = useState<string | null>(null);
@@ -46,6 +47,10 @@ export function AudioPlayer({
   useEffect(() => {
     onLoadErrorRef.current = onLoadError;
   }, [onLoadError]);
+
+  useEffect(() => {
+    sessionTokenRef.current = sessionToken;
+  }, [sessionToken]);
 
   const cancelTiming = useCallback(() => {
     if (frameRef.current !== undefined) {
@@ -97,8 +102,9 @@ export function AudioPlayer({
   const setMediaSource = useCallback(
     async (forceRefresh: boolean) => {
       const sequence = ++requestSequenceRef.current;
+      const activeSessionToken = sessionTokenRef.current;
 
-      if (forceRefresh && !sessionToken && mediaUrl) {
+      if (forceRefresh && !activeSessionToken && mediaUrl) {
         audioRef.current?.load();
         if (sequence === requestSequenceRef.current) {
           setSource(mediaUrl);
@@ -107,7 +113,7 @@ export function AudioPlayer({
       }
 
       const nextMedia = await getUsableMedia(
-        sessionToken,
+        activeSessionToken,
         asset,
         mediaUrl ? { signedUrl: mediaUrl } : null,
         forceRefresh,
@@ -117,7 +123,7 @@ export function AudioPlayer({
         setSource(nextMedia.signedUrl);
       }
     },
-    [asset, mediaUrl, sessionToken],
+    [asset, mediaUrl],
   );
 
   useEffect(() => {
@@ -270,7 +276,7 @@ export function AudioPlayer({
       <audio
         ref={audioRef}
         src={source ?? undefined}
-        preload="auto"
+        preload="metadata"
         onLoadedMetadata={markReady}
         onLoadedData={markReady}
         onCanPlay={markReady}
