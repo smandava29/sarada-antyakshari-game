@@ -85,8 +85,28 @@ export function GuessInput({ disabled, onGuess, onSkip }: GuessInputProps) {
       return [];
     }
 
+    const normalizedQuery = value.toLowerCase();
+
     return searchIndex
       .search(value, { limit: 20 })
+      .sort((a, b) => {
+        const getMatchRank = (item: SongSuggestion) => {
+          const songTitle = item.songTitle.toLowerCase();
+          const movieTitle = item.movieTitle?.toLowerCase() ?? '';
+
+          if (songTitle === normalizedQuery) return 0;
+          if (movieTitle === normalizedQuery) return 1;
+          if (songTitle.startsWith(normalizedQuery)) return 2;
+          if (movieTitle.startsWith(normalizedQuery)) return 3;
+          if (songTitle.includes(normalizedQuery)) return 4;
+          if (movieTitle.includes(normalizedQuery)) return 5;
+          return 6;
+        };
+        const aRank = getMatchRank(a.item);
+        const bRank = getMatchRank(b.item);
+        if (aRank !== bRank) { return aRank - bRank;}
+        return (a.score ?? 0) - (b.score ?? 0);
+      })
       .map((result) => result.item);
   }, [
     loadingCatalog,
@@ -215,7 +235,7 @@ export function GuessInput({ disabled, onGuess, onSkip }: GuessInputProps) {
           disabled={disabled}
           onClick={() => void onSkip()}
         >
-          Skip this Chance
+          Skip this Chance (+2 sec)
         </button>
 
         <button

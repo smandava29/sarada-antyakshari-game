@@ -107,7 +107,7 @@ export function GameView({
             <>
               {questionDate === todayIso() && game.attemptsUsed === 0 && (
                 <p className="game-hint">
-                  Listen to the song clue, Guess the Song, or Skip the chance to listen more of the song.
+                  Listen to the song clue, Guess the Song, or Skip the chance and listen to two more seconds of the song.
                 </p>
               )}
 

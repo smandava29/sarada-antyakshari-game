@@ -7,7 +7,7 @@ interface AttemptTimelineProps {
   maxAttempts: number;
 }
 
-const clueLabels = [" 1 sec", "2 sec", "5 sec", "7 sec", "10 sec"];
+const clueLabels = [" 2 sec", "4 sec", "6 sec", "8 sec", "10 sec"];
 
 export function AttemptTimeline({ attemptsUsed, status, history, maxAttempts }: AttemptTimelineProps) {
   return (

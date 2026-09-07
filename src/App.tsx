@@ -71,7 +71,7 @@ export default function App() {
           </div>
           <ol className="instruction-list">
             <li>Play the song clue.</li>
-            <li>Search and choose a song, or skip the chance.</li>
+            <li>Search and choose a song, or skip the chance (+2sec).</li>
             <li>Skip or incorrect guess unlocks a longer portion of the song.</li>
             <li>The song reveals after a correct guess or after all attempts.</li>
           </ol>
