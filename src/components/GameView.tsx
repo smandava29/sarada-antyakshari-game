@@ -123,6 +123,7 @@ export function GameView({
 
               <GuessInput
                 disabled={submitting}
+                isLastChance={game.attemptsUsed === game.maxAttempts - 1}
                 onGuess={submitGuess}
                 onSkip={skip}
               />

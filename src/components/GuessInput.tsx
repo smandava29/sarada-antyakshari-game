@@ -5,11 +5,12 @@ import type { SongSuggestion } from '../types/game';
 
 interface GuessInputProps {
   disabled: boolean;
+  isLastChance: boolean;
   onGuess: (song: SongSuggestion) => Promise<void>;
   onSkip: () => Promise<void>;
 }
 
-export function GuessInput({ disabled, onGuess, onSkip }: GuessInputProps) {
+export function GuessInput({ disabled, isLastChance, onGuess, onSkip }: GuessInputProps) {
   const [catalog, setCatalog] = useState<SongSuggestion[]>([]);
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<SongSuggestion | null>(null);
@@ -235,7 +236,7 @@ export function GuessInput({ disabled, onGuess, onSkip }: GuessInputProps) {
           disabled={disabled}
           onClick={() => void onSkip()}
         >
-          Skip this Chance (+2 sec)
+          {isLastChance ? 'Give Up!' : 'Skip this Chance (+2 sec)'}
         </button>
 
         <button
