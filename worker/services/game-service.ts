@@ -3,7 +3,6 @@ import {
   createSession,
   findSongById,
   findSongsByDetails,
-  getAttempt,
   getAttemptHistory,
   getArchiveBounds,
   hasDailyGame,
@@ -224,19 +223,17 @@ async function finishAttempt(
     );
   }
 
-  const recordedAttempt = await getAttempt(env.DB, updated.tokenHash, updated.attemptsUsed);
-  if (!recordedAttempt) {
-    throw new ApiError(500, "ATTEMPT_NOT_RECORDED", "The attempt history could not be loaded.");
-  }
-  const attempt = publicAttempt(recordedAttempt);
-
   if (updated.status === "playing") {
-    return { status: updated.status, attemptsUsed: updated.attemptsUsed, attempt };
+    return {
+      status: updated.status,
+      attemptsUsed: updated.attemptsUsed,
+      correct: false,
+    };
   }
   return {
     status: updated.status,
     attemptsUsed: updated.attemptsUsed,
-    attempt,
+    correct: wasCorrect,
     answer: publicAnswer(updated),
     resultMedia: await resultMediaBundle(env, config, updated),
   };

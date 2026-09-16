@@ -64,6 +64,33 @@ export function AudioPlayer({
     }
   }, []);
 
+  const getPlaybackLimit = useCallback(
+    (audio: HTMLAudioElement) => {
+      if (durationLimit === undefined) {
+        return Number.isFinite(audio.duration) && audio.duration > 0
+          ? audio.duration
+          : null;
+      }
+
+      return Number.isFinite(audio.duration) && audio.duration > 0
+        ? Math.min(audio.duration, durationLimit)
+        : durationLimit;
+    },
+    [durationLimit],
+  );
+
+  const syncProgress = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) {
+      return;
+    }
+
+    const playbackLimit = getPlaybackLimit(audio);
+    if (playbackLimit !== null && playbackLimit > 0) {
+      setProgress(Math.min(100, (audio.currentTime / playbackLimit) * 100));
+    }
+  }, [getPlaybackLimit]);
+
   const resetPlayback = useCallback(() => {
     cancelTiming();
 
@@ -87,17 +114,10 @@ export function AudioPlayer({
       return;
     }
 
-    const playbackLimit =
-      durationLimit === undefined
-        ? audio.duration
-        : Math.min(audio.duration || durationLimit, durationLimit);
-
-    if (Number.isFinite(playbackLimit) && playbackLimit > 0) {
-      setProgress(Math.min(100, (audio.currentTime / playbackLimit) * 100));
-    }
+    syncProgress();
 
     frameRef.current = requestAnimationFrame(updateProgress);
-  }, [durationLimit]);
+  }, [syncProgress]);
 
   const setMediaSource = useCallback(
     async (forceRefresh: boolean) => {
@@ -209,23 +229,18 @@ export function AudioPlayer({
     }
 
     try {
-      const playbackLimit =
-        durationLimit === undefined
-          ? audio.duration
-          : Math.min(audio.duration || durationLimit, durationLimit);
+      const playbackLimit = getPlaybackLimit(audio);
 
-      if (
-        Number.isFinite(playbackLimit) &&
-        audio.currentTime >= playbackLimit
-      ) {
+      if (playbackLimit !== null && audio.currentTime >= playbackLimit) {
         audio.currentTime = 0;
         setProgress(0);
       }
 
       await audio.play();
       setPlaying(true);
+      syncProgress();
 
-      if (Number.isFinite(playbackLimit)) {
+      if (playbackLimit !== null) {
         const remaining = Math.max(0, playbackLimit - audio.currentTime);
         stopTimerRef.current = window.setTimeout(
           stopAtLimit,
@@ -267,6 +282,7 @@ export function AudioPlayer({
     setLoading(false);
     setReady(true);
     setFailed(false);
+    syncProgress();
   };
 
   return (
@@ -283,6 +299,7 @@ export function AudioPlayer({
         onEnded={stopAtLimit}
         onError={handleMediaError}
         onTimeUpdate={() => {
+          syncProgress();
           const audio = audioRef.current;
           if (
             audio &&

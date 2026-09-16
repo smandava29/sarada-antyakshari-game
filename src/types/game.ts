@@ -69,12 +69,12 @@ export type AttemptResponse =
   | {
       status: "playing";
       attemptsUsed: number;
-      attempt: AttemptHistoryItem;
+      correct: false;
     }
   | {
       status: "won" | "lost";
       attemptsUsed: number;
-      attempt: AttemptHistoryItem;
+      correct: boolean;
       answer: PublicAnswer;
       resultMedia: ResultMediaBundle |null;
     };

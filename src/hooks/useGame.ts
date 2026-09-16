@@ -74,11 +74,22 @@ function mergeAttemptResponse(
     attemptsUsed: response.attemptsUsed,
     answer: response.status === "playing" ? null : response.answer,
     resultMedia: response.status === "playing" ? null : response.resultMedia,
-    history: current.history.some(
-      (attempt) => attempt.attemptNumber === response.attempt.attemptNumber,
-    )
-      ? current.history
-      : [...current.history, response.attempt],
+  };
+}
+
+function localAttempt(
+  response: AttemptResponse,
+  attemptType: AttemptHistoryItem["attemptType"],
+  song: SongSuggestion | null,
+): AttemptHistoryItem {
+  return {
+    attemptNumber: response.attemptsUsed,
+    attemptType,
+    submittedSongId: song?.id ?? null,
+    wasCorrect: response.correct,
+    songTitle: song?.songTitle ?? null,
+    movieTitle: song?.movieTitle ?? null,
+    createdAt: new Date().toISOString(),
   };
 }
 
@@ -181,8 +192,13 @@ export function useGame(questionDate: string): UseGameResult {
     return started.sessionToken;
   }, [questionDate]);
 
-  const applyAttempt = useCallback((response: AttemptResponse, activeSessionToken: string | null) => {
-    const item = response.attempt;
+  const applyAttempt = useCallback((
+    response: AttemptResponse,
+    activeSessionToken: string | null,
+    attemptType: AttemptHistoryItem["attemptType"],
+    song: SongSuggestion | null,
+  ) => {
+    const item = localAttempt(response, attemptType, song);
 
     setHistory((previous) => {
       if (previous.some((attempt) => attempt.attemptNumber === item.attemptNumber)) {
@@ -221,7 +237,7 @@ export function useGame(questionDate: string): UseGameResult {
           song,
         );
 
-        applyAttempt(response, activeSessionToken);
+        applyAttempt(response, activeSessionToken, "guess", song);
       } catch (caught) {
         setError(
           caught instanceof Error
@@ -252,7 +268,7 @@ export function useGame(questionDate: string): UseGameResult {
     try {
       const activeSessionToken = await ensureSession();
       const response = await gameApi.skip(activeSessionToken);
-      applyAttempt(response, activeSessionToken);
+      applyAttempt(response, activeSessionToken, "skip", null);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : 'Unable to skip this chance.');
     } finally {

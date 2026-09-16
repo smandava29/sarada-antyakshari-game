@@ -76,22 +76,9 @@ describe('game API request minimization', () => {
 
   it('does not deduplicate sequential attempt mutations', async () => {
     const response = {
-      questionDate: '2026-07-29',
       status: 'playing',
       attemptsUsed: 1,
-      maxAttempts: 5,
-      expiresAt: '2026-07-29T12:00:00.000Z',
-      questionMedia: null,
-      answer: null,
-      attempt: {
-        attemptNumber: 1,
-        attemptType: 'skip',
-        submittedSongId: null,
-        wasCorrect: false,
-        songTitle: null,
-        movieTitle: null,
-        createdAt: '2026-07-29T11:00:00.000Z',
-      },
+      correct: false,
     };
     const fetchMock = vi.fn(async () => successResponse(response));
     vi.stubGlobal('fetch', fetchMock);
@@ -107,15 +94,7 @@ describe('game API request minimization', () => {
     const fetchMock = vi.fn(async () => successResponse({
       status: 'playing',
       attemptsUsed: 1,
-      attempt: {
-        attemptNumber: 1,
-        attemptType: 'guess',
-        submittedSongId: '11111111-1111-1111-1111-111111111111',
-        wasCorrect: false,
-        songTitle: 'Duplicate title',
-        movieTitle: 'Movie A',
-        createdAt: '2026-07-29T11:00:00.000Z',
-      },
+      correct: false,
     }));
     vi.stubGlobal('fetch', fetchMock);
     const { gameApi } = await import('./gameApi');
