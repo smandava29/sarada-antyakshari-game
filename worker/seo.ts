@@ -8,40 +8,40 @@ interface SeoDocument {
   fallbackHtml: string;
 }
 
-function archiveDocument(pathname: string): SeoDocument {
-  const dateMatch = pathname.match(/^\/archive\/(\d{4}-\d{2}-\d{2})\/?$/u);
-  const date = dateMatch?.[1];
-  const suffix = date ? `: ${date}` : "";
-
+function archiveDocument(): SeoDocument {
   return {
-    title: `Saradaga Antyakshari Archive${suffix} | Telugu Song Guessing Game`,
-    description: date
-      ? `Play the Saradaga Antyakshari Telugu song guessing game archive for ${date}.`
-      : "Explore previous Saradaga Antyakshari daily Telugu song guessing games.",
-    canonicalPath: date ? `/archive/${date}` : "/archive",
+    title: "Saradaga Antyakshari | Daily Telugu Song Antyakshari Game",
+    description: "Explore previous Saradaga Antyakshari daily Telugu Antyakshari song guessing games.",
+    canonicalPath: "/archive",
     fallbackHtml: `
       <main>
-        <h1>Saradaga Antyakshari Archive${suffix}</h1>
-        <p>Explore previous daily Telugu song guessing games.</p>
+        <h1>Saradaga Antyakshari, Telugu Antyakshari Song Game Archive</h1>
+        <p>Explore previous Saradaga Antyakshari daily Telugu song guessing games.</p>
         <p><a href="/">Play today’s Saradaga Antyakshari game</a></p>
       </main>`,
   };
 }
 
 export function seoDocument(pathname: string): SeoDocument {
-  if (pathname === "/archive" || pathname.startsWith("/archive/")) {
-    return archiveDocument(pathname);
+  if (pathname === "/archive" || pathname === "/archive/") {
+    return archiveDocument();
   }
 
   return {
-    title: "Saradaga Antyakshari | Daily Telugu Song Guessing Game",
+    title: "Saradaga Antyakshari | Daily Telugu Song Guessing Antyakshari Game",
     description:
-      "Play Saradaga Antyakshari, a daily Telugu song guessing game. Listen to a short song clue, search the title, and solve today’s challenge in five chances.",
+      "Play Saradaga Antyakshari, a daily telugu antakshari song guessing game. Listen to a short song clue, name the song, and solve today’s challenge in five chances.",
     canonicalPath: "/",
     fallbackHtml: `
       <main>
-        <h1>Saradaga Antyakshari: Daily Telugu Song Guessing Game</h1>
-        <p>A Telugu song guessing game with a new song every day.</p>
+        <h1>Saradaga Antyakshari: Telugu Antakshari Song Game</h1>
+        <p>Saradaga Antyakshari is a free daily Telugu song guessing game with a new song every day.</p>
+        <h2>How to play</h2>
+        <ol>
+          <li>Listen to the short Telugu song clue.</li>
+          <li>Guess the song title or skip to unlock a longer clue.</li>
+          <li>Solve the daily Telugu music challenge in five chances.</li>
+        </ol>
         <p><a href="/archive">Explore previous games in the archive</a></p>
       </main>`,
   };
@@ -55,6 +55,7 @@ function schema(document: SeoDocument): string {
       {
         "@type": "WebSite",
         name: "Saradaga Antyakshari",
+        alternateName: ["Telugu Antakshari", "Telugu Antyakshari Song Game", "Telugu Song Game", "Daily Telugu Song Guessing Game", "Saradaga Antakshari Game", "Saradaga Antyakshari Telugu Song Game"],
         url: SITE_ORIGIN,
         inLanguage: "en",
       },
@@ -66,6 +67,7 @@ function schema(document: SeoDocument): string {
         isAccessibleForFree: true,
         url,
         description: document.description,
+        keywords: "Antyakshari, Antakshari, Telugu Antakshari, Telugu Antyakshari, Telugu song game, daily song guessing game, Telugu music game, Saradaga Antyakshari, Saradaga Antyakshari game, Sarada Antyakshari, Sarada Antyakshari game, Saradaga Antyakshari Telugu song game, Saradaga Antyakshari daily game, Saradaga Antyakshari daily Telugu song guessing game",
         inLanguage: "en",
       },
     ],

@@ -1,10 +1,10 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { Header } from './components/Header';
 import { Modal } from './components/Modal';
 import { AdsLayout } from "./components/AdsLayout";
 import { FooterActions } from './components/FooterActions';
 import { PrivacyControls } from './components/PrivacyControls';
-import { navigateTo, usePathname } from './lib/router';
+import { usePathname } from './lib/router';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const ArchivePage = lazy(() => import('./pages/ArchivePage'));
@@ -19,11 +19,16 @@ function RouteFallback() {
   );
 }
 
-function UnknownRoute() {
-  useEffect(() => {
-    navigateTo('/', true);
-  }, []);
-  return <RouteFallback />;
+function NotFoundRoute() {
+  return (
+    <main className="page-shell">
+      <section className="state-card">
+        <h1>Page not found</h1>
+        <p>The page you requested does not exist.</p>
+        <a className="primary-button inline-button" href="/">Play today’s game</a>
+      </section>
+    </main>
+  );
 }
 
 function AppRoute({ pathname }: { pathname: string }) {
@@ -31,12 +36,11 @@ function AppRoute({ pathname }: { pathname: string }) {
     return <HomePage />;
   }
 
-  const archiveMatch = pathname.match(/^\/archive(?:\/([^/]+))?\/?$/);
-  if (archiveMatch) {
-    return <ArchivePage requestedDate={archiveMatch[1]} />;
+  if (pathname === '/archive' || pathname === '/archive/') {
+    return <ArchivePage />;
   }
 
-  return <UnknownRoute />;
+  return <NotFoundRoute />;
 }
 
 export default function App() {

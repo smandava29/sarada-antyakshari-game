@@ -1,32 +1,14 @@
-import { useEffect, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { GameView } from '../components/GameView';
 import { previousIsoDate, todayIso } from '../lib/date';
 import { navigateTo } from '../lib/router';
 
-export default function ArchivePage({
-  requestedDate,
-}: {
-  requestedDate?: string;
-}) {
+export default function ArchivePage() {
   const latestArchiveDate = useMemo(
     () => previousIsoDate(todayIso()),
     [],
   );
-
-  const selected = useMemo(
-    () => {
-      if (!requestedDate) return latestArchiveDate;
-      if (requestedDate >= todayIso()) return latestArchiveDate;
-      return requestedDate;
-    },
-    [latestArchiveDate, requestedDate],
-  );
-
-  useEffect(() => {
-    if (!requestedDate || requestedDate !== selected) {
-      navigateTo(`/archive/${selected}`, true);
-    }
-  }, [requestedDate, selected]);
+  const [selectedDate, setSelectedDate] = useState(latestArchiveDate);
 
   return (
     <main className="page-shell">
@@ -43,11 +25,11 @@ export default function ArchivePage({
                 <input
                   className="archive-date-picker"
                   type="date"
-                  value={selected}
+                  value={selectedDate}
                   max={latestArchiveDate}
                   onChange={(event) => {
                     if (event.target.value) {
-                      navigateTo(`/archive/${event.target.value}`);
+                      setSelectedDate(event.target.value);
                     }
                   }}
                 />
@@ -63,7 +45,7 @@ export default function ArchivePage({
           </div>
         </div>
 
-        <GameView questionDate={selected} />
+        <GameView questionDate={selectedDate} />
       </div>
     </main>
   );

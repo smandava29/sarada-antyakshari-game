@@ -74,6 +74,10 @@ function optionsResponse(request: Request, env: Env): Response {
   return new Response(null, { status: 204, headers });
 }
 
+function isGamePage(pathname: string): boolean {
+  return pathname === "/" || pathname === "/archive" || pathname === "/archive/";
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
@@ -123,6 +127,16 @@ export default {
 
     const assetResponse = await env.ASSETS.fetch(request);
     const isHtml = assetResponse.headers.get("Content-Type")?.includes("text/html");
+
+    if (isHtml && !isGamePage(url.pathname)) {
+      return withSecurityHeaders(
+        new Response("Not found", {
+          status: 404,
+          headers: { "Content-Type": "text/plain; charset=utf-8" },
+        }),
+      );
+    }
+
     return withSecurityHeaders(
       isHtml ? rewriteSeoDocument(assetResponse, url.pathname) : assetResponse,
     );
