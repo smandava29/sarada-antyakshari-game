@@ -45,15 +45,18 @@ export function rateLimitResponse(error: unknown): Response {
   return response;
 }
 
-export function withSecurityHeaders(response: Response): Response {
+export function withSecurityHeaders(response: Response, cspNonce?: string): Response {
   const secured = new Response(response.body, response);
   secured.headers.set("X-Content-Type-Options", "nosniff");
   secured.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   secured.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
   secured.headers.set("X-Frame-Options", "SAMEORIGIN");
+  const scriptSource = cspNonce
+    ? `'nonce-${cspNonce}' 'unsafe-inline' 'unsafe-eval' 'strict-dynamic' https: http:`
+    : "'self'";
   secured.headers.set(
     "Content-Security-Policy",
-    "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.googlesyndication.com https://*.googleusercontent.com https://*.gstatic.com; media-src 'self' blob:; connect-src 'self' https://*.googlesyndication.com https://*.google.com; frame-src https://*.googlesyndication.com https://*.google.com; font-src 'self'; worker-src 'self' blob:; manifest-src 'self'; upgrade-insecure-requests",
+    `default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; script-src ${scriptSource}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob:; connect-src 'self' https:; frame-src https:; font-src 'self' data:; worker-src 'self' blob:; manifest-src 'self'; upgrade-insecure-requests`,
   );
   return secured;
 }

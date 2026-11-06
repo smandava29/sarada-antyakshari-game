@@ -56,17 +56,17 @@ export function AdsLayout({
 }: AdsLayoutProps) {
   const showSideAds =
     useShowSideAds();
-  const [hasAdConsent, setHasAdConsent] = useState(() => getAdConsent() === "accepted");
+  const [adsAllowed, setAdsAllowed] = useState(() => getAdConsent() !== "rejected");
 
   useEffect(() => {
     const updateConsent = (event: Event) =>
-      setHasAdConsent((event as CustomEvent<"accepted" | "rejected">).detail === "accepted");
+      setAdsAllowed((event as CustomEvent<"accepted" | "rejected">).detail !== "rejected");
     window.addEventListener(AD_CONSENT_EVENT, updateConsent);
     return () => window.removeEventListener(AD_CONSENT_EVENT, updateConsent);
   }, []);
 
   useEffect(() => {
-    if (!adsConfig.loadRealAds || !adsConfig.client || !hasAdConsent) {
+    if (!adsConfig.loadRealAds || !adsConfig.client || !adsAllowed) {
       return;
     }
 
@@ -79,13 +79,21 @@ export function AdsLayout({
     script.id = scriptId;
     script.async = true;
     script.crossOrigin = "anonymous";
+    // The Worker supplies this on HTML responses so AdSense can run under its
+    // strict Content Security Policy. It is absent during local development.
+    const nonce = document
+      .querySelector<HTMLMetaElement>('meta[name="csp-nonce"]')
+      ?.content;
+    if (nonce) {
+      script.nonce = nonce;
+    }
     script.src =
       `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(adsConfig.client)}`;
     document.head.append(script);
     return () => script.remove();
-  }, [hasAdConsent]);
+  }, [adsAllowed]);
 
-  if (!adsConfig.showLayout || (adsConfig.loadRealAds && !hasAdConsent)) {
+  if (!adsConfig.showLayout || (adsConfig.loadRealAds && !adsAllowed)) {
     return <>{children}</>;
   }
 

@@ -137,9 +137,15 @@ export default {
       );
     }
 
-    return withSecurityHeaders(
-      isHtml ? rewriteSeoDocument(assetResponse, url.pathname) : assetResponse,
-    );
+    if (isHtml) {
+      const cspNonce = crypto.randomUUID().replaceAll("-", "");
+      return withSecurityHeaders(
+        rewriteSeoDocument(assetResponse, url.pathname, cspNonce),
+        cspNonce,
+      );
+    }
+
+    return withSecurityHeaders(assetResponse);
   },
 
   async scheduled(_controller: ScheduledController, env: Env): Promise<void> {

@@ -55,7 +55,7 @@ function schema(document: SeoDocument): string {
       {
         "@type": "WebSite",
         name: "Saradaga Antyakshari",
-        alternateName: ["Telugu Antakshari", "Telugu Antyakshari Song Game", "Telugu Song Game", "Daily Telugu Song Guessing Game", "Saradaga Antakshari Game", "Saradaga Antyakshari Telugu Song Game"],
+        alternateName: ["Telugu Antakshari", "Telugu Antyakshari Song Game", "Telugu Song Game", "Daily Telugu Song Guessing Game", "Saradaga Antakshari Game", "Saradaga Antyakshari Telugu Song Game", "Tollywood songs game", "Telugu music game"],
         url: SITE_ORIGIN,
         inLanguage: "en",
       },
@@ -110,11 +110,25 @@ class SeoHandler {
   }
 }
 
-export function rewriteSeoDocument(response: Response, pathname: string): Response {
+export function rewriteSeoDocument(
+  response: Response,
+  pathname: string,
+  cspNonce: string,
+): Response {
   const document = seoDocument(pathname);
   const handler = new SeoHandler(document);
 
   return new HTMLRewriter()
+    .on("head", {
+      element: (element) => {
+        element.append(`<meta name="csp-nonce" content="${cspNonce}">`, { html: true });
+      },
+    })
+    .on("script", {
+      element: (element) => {
+        element.setAttribute("nonce", cspNonce);
+      },
+    })
     .on("title", { element: (element) => handler.text(element) })
     .on('meta[name="description"]', { element: (element) => handler.description(element) })
     .on('meta[property="og:description"]', { element: (element) => handler.description(element) })
